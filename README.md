@@ -8,13 +8,11 @@ Many complex physical systems are governed by high-dimensional parameter spaces 
 
 ## Context
 
-The project is motivated by fusion energy research, where tokamak-based systems are used to confine ultra-hot plasma. High-fidelity simulations of these systems can require hours to days per evaluation, limiting parameter-space exploration. The methods implemented here are general and transferable to other simulation-driven domains.
+The project is motivated by fusion energy research, where tokamak-based systems are used to confine ultra-hot plasma. High-fidelity simulations can require hours to days per evaluation, severely limiting parameter-space exploration. The methods implemented here are general and transferable to other simulation-driven domains.
 
 ## Approach
 
-I train a feedforward neural network as a fast surrogate model using simulation data generated for a tokamak plasma system. The surrogate is designed to predict system responses under previously unseen conditions while significantly reducing evaluation time.
-
-Model performance is benchmarked against a linear regression baseline to quantify tradeoffs between predictive accuracy, interpretability, and computational cost. Hyperparameters are optimized using Bayesian optimization (TPE), and robustness is assessed across multiple random seeds.
+I train a feedforward neural network as a fast surrogate model using simulation data from a tokamak plasma system, designed to predict system responses under unseen conditions while significantly reducing evaluation time. Performance is benchmarked against a linear regression baseline to quantify tradeoffs between predictive accuracy, interpretability, and computational cost, with hyperparameters optimized via Bayesian optimization (TPE) and robustness assessed across multiple random seeds.
 
 ## Code Structure
 
@@ -41,9 +39,13 @@ The original simulation data used in this project cannot be shared due to confid
 ## How to Run
 
 Run training and optimization:
+```
 python run_train.py
+```
 Evaluate trained models:
+```
 python run_eval.py
+```
 
 ## Possible Extensions
 
