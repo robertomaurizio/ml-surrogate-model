@@ -62,9 +62,8 @@ def build_and_train_model(hp, x_train, y_train, x_val, y_val, verbose = 0, max_e
                         verbose=verbose)
 
     return model, history
-  
+
 def define_hyperparameter_space():
-  # Define the hyperparameter space
   # Define the original choices of hyperparameter values
   num_layers_choices = [1, 2]
   units_choices = [16, 32, 64]
@@ -94,12 +93,13 @@ def objective(hyperparameters, x_combined, y_combined):
         y_combined: Combined targets for cross-validation.
 
     Returns:
-        The mean validation loss across 5 folds achieved by the model with the given hyperparameters.
+        A dictionary for hyperopt, including the mean validation loss, status,
+        fold-wise validation losses, and the evaluated hyperparameters.
     """
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
     fold_validation_losses = []
 
-    print(f"Evaluating hyperparameters: {hyperparameters}") # Added print statement
+    print(f"Evaluating hyperparameters: {hyperparameters}")
 
     for fold, (train_index, val_index) in enumerate(kf.split(x_combined)):
         # Split data for the current fold
@@ -118,8 +118,8 @@ def objective(hyperparameters, x_combined, y_combined):
             y_train_log_fold.iloc[:, col_index] = np.log(y_train_log_fold.iloc[:, col_index])
             y_val_log_fold.iloc[:, col_index] = np.log(y_val_log_fold.iloc[:, col_index])
 
-        # Scale targets (y) using Min-Max normalization - fit only on log-transformed training data for the fold
-        scaler_y_fold = MinMaxScaler()
+        # Standardize targets (y) - fit only on log-transformed training data for the fold
+        scaler_y_fold = StandardScaler()
         y_train_scaled_fold = scaler_y_fold.fit_transform(y_train_log_fold)
         y_val_scaled_fold = scaler_y_fold.transform(y_val_log_fold)
 
@@ -132,13 +132,13 @@ def objective(hyperparameters, x_combined, y_combined):
         fold_validation_losses.append(current_fold_val_loss)
         print(f"  Fold {fold + 1} completed. Validation Loss: {current_fold_val_loss:.6f}")
 
-    mean_loss = np.mean(fold_validation_losses) # Define mean_loss variable
+    mean_loss = np.mean(fold_validation_losses)
     print(f"Mean validation loss for current hyperparameters: {mean_loss:.6f}\n")
 
-    # Return a dictionary for hyperopt
-    return {'loss': mean_loss, 'status': STATUS_OK, 'fold_losses': fold_validation_losses}  
+    # Return a dictionary for hyperopt, including the hyperparameters themselves
+    return {'loss': mean_loss, 'status': STATUS_OK, 'fold_losses': fold_validation_losses, 'hyperparameters': hyperparameters}
   
-def fit_linear_regression_model(x_train, y_train, x_test, y_test):
+def fit_linear_model(x_train, y_train, x_test, y_test):
   # Fit the linear regression model to the training data
   linear_model = LinearRegression()
   linear_model.fit(np.log(x_train), np.log(y_train))
@@ -160,4 +160,4 @@ def fit_linear_regression_model(x_train, y_train, x_test, y_test):
   print("\nLinear regression model intercept:")
   print(linear_model.intercept_)
 
-  return y_predicted_test_linear
+  return y_predicted_test_linear, mse_test_linear, r2_test_linear
