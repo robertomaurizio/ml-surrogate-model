@@ -12,7 +12,7 @@ The project is motivated by fusion energy research, where tokamak-based systems 
 
 ## Approach
 
-I train a feedforward neural network as a fast surrogate model using simulation data from a tokamak plasma system, designed to predict system responses under unseen conditions while significantly reducing evaluation time. Performance is benchmarked against a linear regression baseline to quantify tradeoffs between predictive accuracy, interpretability, and computational cost, with hyperparameters optimized via Bayesian optimization (TPE) and robustness assessed across multiple random seeds.
+I train a feedforward neural network as a fast surrogate model using simulation data from a tokamak plasma system, designed to predict system responses under unseen conditions while significantly reducing evaluation time. Performance is benchmarked against a linear regression baseline to quantify tradeoffs between predictive accuracy, interpretability, and computational cost, with hyperparameters optimized via Bayesian optimization (TPE) combined with 5-fold cross validation, and robustness assessed across multiple random seeds.
 
 ## Code Structure
 
@@ -22,7 +22,7 @@ src/
 - model.py  
   - Model definitions, training routines, linear regression baseline, and hyperparameter space.
 - train.py  
-  - Training orchestration, hyperparameter optimization (TPE), and multi-seed runs.
+  - Training orchestration, hyperparameter optimization (TPE + cross-validation), and multi-seed runs.
 - eval.py  
   - Evaluation, diagnostics, and visualization of model predictions and optimization results.
 
@@ -31,10 +31,9 @@ src/
 The original simulation data used in this project cannot be shared due to confidentiality constraints. The code is shared to illustrate the workflow. Results reported in the accompanying report are based on real simulation data.
 
 ## Results
-- The neural network achieves an approximate 15–20% reduction in mean squared error and improves R² from ~0.93 to ~0.94–0.95 on held-out test data, demonstrating improved predictive power while maintaining stability.
+- The neural network achieves an approximate 70-75% reduction in mean squared error and improves R² from ~0.93 to ~0.97 on held-out test data, demonstrating improved predictive power while maintaining stability.
 - The weakest performance is observed for quantities governed by highly localized and strongly nonlinear effects, suggesting that residual errors are driven by intrinsic system complexity rather than overfitting or numerical issues.
 - Overall, the surrogate model delivers orders-of-magnitude speedups over full simulations while preserving predictive accuracy for most targets, making it suitable for rapid parameter exploration and sensitivity analysis.
-
 
 ## How to Run
 
@@ -51,7 +50,6 @@ python run_eval.py
 
 - Expand training data coverage by incorporating a larger and more diverse simulation dataset to improve generalization across regimes.
 - Enrich the feature set to capture additional dependencies and interactions that are not represented in the current inputs.
-- Incorporate domain-informed constraints or structured loss terms to guide the model toward physically consistent solutions.
 - Reparameterize inputs and targets using more meaningful aggregate quantities (e.g., fluxes or power-like measures) to simplify the learning task and improve robustness.
 
 
