@@ -14,6 +14,13 @@ The project is motivated by fusion energy research, where tokamak-based systems 
 
 I train a feedforward neural network as a fast surrogate model using simulation data from a tokamak plasma system, designed to predict system responses under unseen conditions while significantly reducing evaluation time. Performance is benchmarked against a linear regression baseline to quantify tradeoffs between predictive accuracy, interpretability, and computational cost, with hyperparameters optimized via Bayesian optimization (TPE) combined with 5-fold cross validation, and robustness assessed across multiple random seeds.
 
+
+📄 **Technical Report**
+
+A detailed technical report covering data generation, preprocessing, model architecture, hyperparameter optimization, evaluation methodology, and results is available here:
+[Fast Machine Learning Surrogate Model for Complex Physical Systems.pdf
+](https://github.com/robertomaurizio/ml-surrogate-model/blob/a453578711ea3cf0f15307f192d5cc851956882d/Fast%20Machine%20Learning%20Surrogate%20Model%20for%20Complex%20Physical%20Systems.pdf)
+
 ## Code Structure
 
 src/
